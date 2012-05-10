@@ -10,12 +10,25 @@ var getTags = function() {
   return result;
 };
 
-var getInternalVariable = function() {
+var getInternalVariable = function(data) {
   // JS script injection, so that we can read the JS class 'InternalJSVariable'
-  var internalScript = function() {
-      var textarea = document.getElementById('transfer-dom-area');
-      textarea.value = JSON.stringify(window["EmbedData"]);
-  };
+  var internalScript;
+  
+  if(data === "EmbedData") {
+    internalScript = function() {
+        var textarea = document.getElementById('transfer-dom-area');
+        textarea.value = JSON.stringify(window["EmbedData"]);
+    };
+  }
+  else if(data === "BandData") {
+    internalScript = function() {
+        var textarea = document.getElementById('transfer-dom-area');
+        textarea.value = JSON.stringify(window["BandData"]);
+    };
+  }
+  else {
+    return "";
+  }
 
   // Create a dummy textarea DOM.
   var textarea = document.createElement('textarea');
@@ -47,11 +60,8 @@ trackInfo.track = embedData["title"];
 trackInfo.album = embedData["album_title"];
 trackInfo.artist = embedData["artist"];
 
-// console.log("EmbedData: " + embedData);
-
-// var bandData = getInternalVariable("BandData");
-// trackInfo.bio = bandData["bio"];
-// trackInfo.bio = bandData["bio"]["bio"];
+var bandData = getInternalVariable("BandData");
+bandData = JSON.parse(bandData);
+trackInfo.bio = bandData["bio"]["bio"];
 
 chrome.extension.sendRequest(trackInfo);
-// chrome.extension.sendRequest({"artist":"Pink Floyd", "album":"Dark Side of the Moon", "track":"Time"})

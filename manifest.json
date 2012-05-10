@@ -1,0 +1,28 @@
+{
+  "name" : "Bandcamp to Tumblr",
+  "version" : "0.1",
+  "manifest_version" : 2,
+
+  "description" : "An extension that lets you post music from Bandcamp to Tumblr.",
+  "icons" : {},
+  // "default_locale" : "en",
+
+  "page_action" : {
+    "default_icon" : "icon.png",
+    "default_title" : "Post to Tumblr",
+    "default_popup" : "popup.html",
+    "run_at" : "document_idle"
+  },
+
+  "background" : {
+    "scripts" : ["background.js"]
+  },
+  
+  "content_scripts" : [
+    {
+      // "matches" : ["http://*/*"],
+      "matches": ["*://*.bandcamp.com/track/*"],
+      "js" : ["content.js"]
+    }
+  ]
+}
